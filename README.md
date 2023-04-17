@@ -20,11 +20,9 @@ GPT-3.5 Turbo has some limitations regarding the length of stories it can genera
 
 ## Usage
 
-Customize the prompts and rules according to your own needs.
-
-To start the story generation, run the `app.py` script:
-
-Specify the desired length of the story and the level of randomness, and save the generated story as a PDF or DOCX file.
+1. Customize the prompts and rules according to your own needs.
+2. To start the story generation, run the `app.py` script.
+3. Input the desired length of the story and the level of randomness, and save the generated story as a PDF or DOCX file.
 
 ## Contribution
 
