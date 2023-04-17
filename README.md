@@ -1,6 +1,6 @@
 # GPT-3.5 Turbo Story Generator
 
-This project explores the capabilities and limitations of the GPT-3.5 Turbo model from OpenAI. It's designed to generate stories based on user input, with a focus on the Dungeons & Dragons fantasy genre.
+This project explores the capabilities and limitations of the GPT-3.5 Turbo model from OpenAI. It's designed to generate stories based on the prompt and rules provided.
 
 ## Limitations
 
