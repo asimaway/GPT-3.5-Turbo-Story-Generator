@@ -1,43 +1,53 @@
-import openai
 import os
-import pathlib
+import openai
 from docx import Document
-from ruleset import rules
+import pathlib
+from docx2pdf import convert
+from save_story import save_as_docx, save_as_pdf
 
-openai.api_key = "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" #replace this with your own key 
+# Replace with your own OpenAI API key
+openai.api_key = "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"
 
-story_prompt = "Write a Dungeons & Dragons story that follows these rules:\n" + rules #change the promt and rules as required
+prompt = "Write a short Dungeons & Dragons story that follows these rules: "
+rules = """
+- The story takes place in a medieval fantasy world called Eldoria.
+- There are five main characters: Aramil, Thalia, Grom, Nissa, Kael.
+- The characters meet in a tavern located in a small town named Stoneshire.
+- They form an adventuring party to explore a recently discovered ancient ruin.
+- The ruin is said to contain a powerful artifact known as the Orb of Azoria.
+- The main antagonist is an evil necromancer named Valthor.
+- The story includes various challenges and encounters during the journey.
+- The story must include a subplot involving a mysterious figure who aids the party.
+- The story should contain moments of humor, suspense, and drama.
+- The story must end on a hopeful note, with the possibility of future adventures.
+"""
+
+story_prompt = prompt + rules
+max_tokens = int(input("Enter the length of the story (max is 4000): "))
+n = 1  # Number of completions to generate
+temperature = float(input("Enter the temperature (higher values = more randomness, e.g., 0.1 to 1.0): "))
 
 response = openai.Completion.create(
     engine="text-davinci-002",
     prompt=story_prompt,
-    max_tokens=1500, #controls the length of the story
-    n=1,
+    max_tokens=max_tokens,
+    n=n,
     stop=None,
-    temperature=1.0, #this field controls randomness 1.0 is the highest and 0.1 is the lowest
+    temperature=temperature,
 )
 
-story = response['choices'][0]['text'].strip()
+story = response.choices[0].text.strip()
 
-# Function to find the next available file name
-def find_next_available_filename(filename_base, extension):
-    i = 1
-    while True:
-        file_name = f"{filename_base}_{i}.{extension}"
-        if not pathlib.Path(file_name).exists():
-            break
-        i += 1
-    return file_name
+filename_base = f"DnD_story_{max_tokens}_{temperature}"
+folder = "generated_stories"
+pathlib.Path(folder).mkdir(exist_ok=True)
 
-filename_base = "dnd_story"
-extension = "docx"
-available_filename = find_next_available_filename(filename_base, extension)
+# Need Office to properly save pdf
+# output_format = input("Do you want to generate a PDF or keep it as DOCX? (Enter 'PDF' or 'DOCX'): ")
+# if output_format.lower() == "pdf":
+#     pdf_filename = save_as_pdf(folder, filename_base, story)
+#     print(f"Story saved as: {pdf_filename}")
+# else:
 
-folder = "stories"  # Change this to the desired folder name
-pathlib.Path(folder).mkdir(exist_ok=True)  # Create the folder if it doesn't exist
-available_filename = os.path.join(folder, find_next_available_filename(filename_base, extension))
-
-
-document = Document()
-document.add_paragraph(story)
-document.save(available_filename)
+docx_filename = save_as_docx(folder, filename_base, story)
+print(f"Story saved as: {docx_filename}")
