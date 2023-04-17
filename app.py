@@ -1,13 +1,14 @@
 import os
 import openai
-from docx import Document
 import pathlib
-from docx2pdf import convert
 from save_story import save_as_docx, save_as_pdf
+from dotenv import load_dotenv
 
-# Replace with your own OpenAI API key
-openai.api_key = "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"
+load_dotenv()
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+#Customise Promt and rules as needed
 prompt = "Write a short Dungeons & Dragons story that follows these rules: "
 rules = """
 - The story takes place in a medieval fantasy world called Eldoria.
@@ -25,7 +26,7 @@ rules = """
 story_prompt = prompt + rules
 max_tokens = int(input("Enter the length of the story (max is 4000): "))
 n = 1  # Number of completions to generate
-temperature = float(input("Enter the temperature (higher values = more randomness, e.g., 0.1 to 1.0): "))
+temperature = float(input("Enter the temperature (higher values = more randomness, between 0.1 to 1.0): "))
 
 response = openai.Completion.create(
     engine="text-davinci-002",
@@ -42,12 +43,11 @@ filename_base = f"DnD_story_{max_tokens}_{temperature}"
 folder = "generated_stories"
 pathlib.Path(folder).mkdir(exist_ok=True)
 
-# Need Office to properly save pdf
-# output_format = input("Do you want to generate a PDF or keep it as DOCX? (Enter 'PDF' or 'DOCX'): ")
-# if output_format.lower() == "pdf":
-#     pdf_filename = save_as_pdf(folder, filename_base, story)
-#     print(f"Story saved as: {pdf_filename}")
-# else:
-
-docx_filename = save_as_docx(folder, filename_base, story)
-print(f"Story saved as: {docx_filename}")
+# Need MS Office to properly save pdf
+output_format = input("Do you want to generate a PDF or keep it as DOCX? (Enter 'PDF' or 'DOCX'): ")
+if output_format.lower() == "pdf":
+    pdf_filename = save_as_pdf(folder, filename_base, story)
+    print(f"Story saved as: {pdf_filename}")
+else:
+    docx_filename = save_as_docx(folder, filename_base, story)
+    print(f"Story saved as: {docx_filename}")
