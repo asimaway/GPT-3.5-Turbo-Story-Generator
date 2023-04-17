@@ -1,0 +1,4 @@
+openai==0.27.0
+python-dotenv==0.19.2
+python-docx==0.8.11
+docx2pdf==0.1.7
