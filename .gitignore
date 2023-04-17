@@ -1,0 +1,7 @@
+# .gitignore
+
+# Ignore the .env file
+.env
+
+# Ignore the pdf folder
+pdf/
